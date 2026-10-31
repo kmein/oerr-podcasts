@@ -436,7 +436,7 @@
 {"broadcaster": "ARD", "station": "SR", "title": "Land & Leute", "rss": "https://sr-mediathek.de/pcast/feeds/SR3_LL_P/feed.xml"},
 {"broadcaster": "ARD", "station": "SR", "title": "Liebt Euch! Der Dating Podcast", "rss": "https://sr-mediathek.de/pcast/feeds/UD_LE_P/feed.xml"},
 {"broadcaster": "ARD", "station": "SR", "title": "Medien - Cross und Quer", "rss": "https://sr-mediathek.de/pcast/feeds/SR2_ME_P/feed.xml"},
-{"broadcaster": "ARD", "station": "SR", "title": "Schicksal - der SR 1-Podcast über das Leben", "rss": "https://sr-mediathek.de/pcast/feeds/SR1_SPUL_P/feed.xml", "fails": 1},
+{"broadcaster": "ARD", "station": "SR", "title": "Schicksal - der SR 1-Podcast über das Leben", "rss": "https://sr-mediathek.de/pcast/feeds/SR1_SPUL_P/feed.xml"},
 {"broadcaster": "ARD", "station": "SR 1", "title": "Abendrot", "rss": "https://sr-mediathek.de/pcast/feeds/SR1_AB_P/feed.xml"},
 {"broadcaster": "ARD", "station": "SR 1", "title": "Professorin Domino", "rss": "https://sr-mediathek.de/pcast/feeds/SR1_DO_P/feed.xml"},
 {"broadcaster": "ARD", "station": "SR 1", "title": "SR 1 Fernsehrausch - der TV-Podcast zum Hören", "rss": "https://sr-mediathek.de/pcast/feeds/SR1_FR_P/feed.xml"},
