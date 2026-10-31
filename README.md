@@ -14,8 +14,8 @@ weekly and published as a filterable page plus OPML for feed readers:
    podcast pages and the ORF audio API;
 2. fetches every feed in `feeds.json` and every newly found URL;
 3. adds new URLs that are valid podcast feeds and not an alias of a known one
-   (same enclosures), and drops a known feed after it has failed four runs in a
-   row;
+   (most enclosures shared), and drops a known feed after it has failed four
+   runs in a row;
 4. drops shows from `missing.json` once ARD Sounds lists a working feed for
    them or they have been inactive for a year;
 5. commits the changed lists and deploys `site/`.

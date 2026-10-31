@@ -226,12 +226,12 @@ def stats(eps):
             per_week = min(7.0, (len(days) - 1) / max((days[-1] - days[0]).days, 1) * 7)
     return dict(
         last=dates[-1].date().isoformat() if dates else None,
-        audio=kinds["audio"], video=kinds["video"], media=sum(kinds.values()),
+        audio=kinds["audio"], video=kinds["video"],
         per_week=per_week, bulk=bulk,
         dur=statistics.mean(durs) if durs else None,
         dur_median=statistics.median(durs) if durs else None,
         dur_n=len(durs),
-        sig=tuple(sorted(u for e in eps for u in e["urls"] if u)),
+        encs={u for e in eps for u in e["urls"] if u},
     )
 
 
@@ -346,7 +346,7 @@ def render(rows, missing):
     (SITE / "feeds-aktiv.opml").write_text(opml("Podcasts der Öffentlich-Rechtlichen (aktiv)", active))
     for b in broadcasters:
         (SITE / f"feeds-{slug(b)}.opml").write_text(opml(f"Podcasts: {b}", [(f, r) for f, r in rows if f["broadcaster"] == b]))
-    data = [{**f, **{k: v for k, v in r.items() if k not in ("sig", "media")}} for f, r in rows]
+    data = [{**f, **{k: v for k, v in r.items() if k != "encs"}} for f, r in rows]
     (SITE / "feeds.json").write_text(json.dumps(data, ensure_ascii=False, indent=0))
 
 
@@ -377,12 +377,34 @@ def main():
     log(f"checking {len(feeds)} known feeds and {len(new)} candidates")
     results = check_all([f["rss"] for f in feeds] + [c["rss"] for c in new.values()])
 
-    kept, rows, sigs = [], [], set()
-    for f in feeds:
+    owner = {}  # enclosure url -> feed that published it
+
+    def alias_of(r):
+        # a url sharing most enclosures with a known feed is another address
+        # for that feed; exact equality is too strict for feeds that change
+        # between two fetches
+        hits = collections.Counter(owner[u] for u in r["encs"] if u in owner)
+        if hits:
+            other, n = hits.most_common(1)[0]
+            if n >= len(r["encs"]) / 2:
+                return other
+        return None
+
+    def claim(f, r):
+        for u in r["encs"]:
+            owner.setdefault(u, f["rss"])
+
+    kept, rows = [], []
+    # hand-curated feeds claim their enclosures before auto-added ones, so an
+    # alias that slipped in while its original was failing is removed again
+    for f in sorted(feeds, key=lambda f: f.get("added", "")):
         r = results[f["rss"]]
         if isinstance(r, dict):
+            if "added" in f and (other := alias_of(r)):
+                log(f"drop {f['rss']} (alias of {other})")
+                continue
             f.pop("fails", None)
-            sigs.add(r["sig"])
+            claim(f, r)
             rows.append((f, r))
         else:
             f["fails"] = f.get("fails", 0) + 1
@@ -393,11 +415,10 @@ def main():
         kept.append(f)
     for c in new.values():
         r = results[c["rss"]]
-        # same enclosures as a known feed: an alias url, not a new podcast
-        if not isinstance(r, dict) or not (r["audio"] or r["video"]) or r["sig"] in sigs:
+        if not isinstance(r, dict) or not (r["audio"] or r["video"]) or alias_of(r):
             continue
-        sigs.add(r["sig"])
-        f = dict(broadcaster=c["broadcaster"], station=c["station"], title=c.get("title") or r["title"], rss=c["rss"])
+        f = dict(broadcaster=c["broadcaster"], station=c["station"], title=c.get("title") or r["title"], rss=c["rss"], added=NOW.date().isoformat())
+        claim(f, r)
         log(f"add {f['rss']} ({f['title']})")
         kept.append(f)
         rows.append((f, r))
