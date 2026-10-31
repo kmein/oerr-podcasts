@@ -1,9 +1,9 @@
-# rundfunk-feeds
+# oerr-podcasts
 
 Official podcast RSS feeds of the public broadcasters in Germany, Austria and
 Switzerland (ARD, ZDF, Deutschlandradio, Deutsche Welle, ORF, SRG SSR), checked
 weekly and published as a filterable page plus OPML for feed readers:
-<https://kmein.github.io/rundfunk-feeds/>
+<https://kmein.github.io/oerr-podcasts/>
 
 ## How it stays current
 

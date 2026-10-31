@@ -22,8 +22,8 @@ from xml.sax.saxutils import quoteattr
 
 ROOT = Path(__file__).parent
 SITE = ROOT / "site"
-REPO_URL = "https://github.com/kmein/rundfunk-feeds"
-UA = f"Mozilla/5.0 (compatible; rundfunk-feeds; +{REPO_URL})"
+REPO_URL = "https://github.com/kmein/oerr-podcasts"
+UA = f"Mozilla/5.0 (compatible; oerr-podcasts; +{REPO_URL})"
 NOW = dt.datetime.now(dt.timezone.utc)
 ACTIVE = NOW - dt.timedelta(days=365)
 # a feed has to fail this many runs in a row before it is dropped, so that one
